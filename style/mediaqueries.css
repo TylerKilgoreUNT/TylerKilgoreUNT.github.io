@@ -15,10 +15,6 @@
 }
   
 @media screen and (max-width: 1200px) {
-    .logo {
-        height: 14vh;
-    }
-    
     #desktop-nav {
       display: none;
     }
