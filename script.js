@@ -1,8 +1,13 @@
 function toggleMenu() {
     const menu = document.querySelector(".menu-links");
     const icon = document.querySelector(".hamburger-icon");
+    if (!menu || !icon) {
+        return;
+    }
+
     menu.classList.toggle("open");
     icon.classList.toggle("open");
+    icon.setAttribute("aria-expanded", String(menu.classList.contains("open")));
 
     // Re-trigger list item animation each time mobile menu opens.
     if (menu.classList.contains("open")) {
@@ -14,6 +19,46 @@ function toggleMenu() {
             item.style.animationDelay = `${index * 65}ms`;
         });
     }
+}
+
+function setupThemeToggle() {
+    const themeToggles = Array.from(document.querySelectorAll("[data-theme-toggle]"));
+    if (themeToggles.length === 0) {
+        return;
+    }
+
+    const storageKey = "preferred-theme";
+    const systemPrefersDark = globalThis.matchMedia("(prefers-color-scheme: dark)").matches;
+    const savedTheme = globalThis.localStorage.getItem(storageKey);
+    let initialTheme = savedTheme;
+    if (savedTheme !== "dark" && savedTheme !== "light") {
+        initialTheme = systemPrefersDark ? "dark" : "light";
+    }
+
+    const applyTheme = (theme) => {
+        document.body.dataset.theme = theme;
+
+        const isDark = theme === "dark";
+        themeToggles.forEach((toggle) => {
+            toggle.setAttribute("aria-pressed", String(isDark));
+            toggle.setAttribute("aria-label", isDark ? "Switch to light mode" : "Switch to dark mode");
+
+            const icon = toggle.querySelector(".theme-toggle__icon");
+            if (icon) {
+                icon.textContent = isDark ? "sun" : "moon";
+            }
+        });
+    };
+
+    applyTheme(initialTheme);
+
+    themeToggles.forEach((toggle) => {
+        toggle.addEventListener("click", () => {
+            const nextTheme = document.body.dataset.theme === "dark" ? "light" : "dark";
+            applyTheme(nextTheme);
+            globalThis.localStorage.setItem(storageKey, nextTheme);
+        });
+    });
 }
 
 function setupHyperframeStyleAnimations() {
@@ -70,18 +115,54 @@ function setupSocialIconHoverEffects() {
         return;
     }
 
-    const socialIcons = Array.from(socialContainer.querySelectorAll(".social-icon"));
+    const socialLinks = Array.from(socialContainer.querySelectorAll(".social-link"));
+    const socialIcons = socialLinks
+        .map((link) => link.querySelector(".social-icon"))
+        .filter(Boolean);
+
+    if (socialIcons.length === 0) {
+        return;
+    }
+
+    socialIcons.forEach((icon) => {
+        const hoverSrc = icon.dataset.hoverSrc;
+        if (hoverSrc) {
+            const preload = new Image();
+            preload.src = hoverSrc;
+        }
+    });
+
+    const setIconImageState = (icon, isActive) => {
+        const defaultSrc = icon.dataset.defaultSrc;
+        const hoverSrc = icon.dataset.hoverSrc;
+
+        if (isActive && hoverSrc) {
+            icon.src = hoverSrc;
+            return;
+        }
+
+        if (defaultSrc) {
+            icon.src = defaultSrc;
+        }
+    };
 
     const clearSocialStates = () => {
         socialIcons.forEach((icon) => {
             icon.classList.remove("is-active", "shift-left", "shift-right");
+            setIconImageState(icon, false);
         });
     };
 
-    socialIcons.forEach((icon, activeIndex) => {
+    socialLinks.forEach((link, activeIndex) => {
+        const icon = socialIcons[activeIndex];
+        if (!icon) {
+            return;
+        }
+
         const applyState = () => {
             clearSocialStates();
             icon.classList.add("is-active");
+            setIconImageState(icon, true);
 
             socialIcons.forEach((otherIcon, index) => {
                 if (index < activeIndex) {
@@ -92,8 +173,8 @@ function setupSocialIconHoverEffects() {
             });
         };
 
-        icon.addEventListener("mouseenter", applyState);
-        icon.addEventListener("focus", applyState);
+        link.addEventListener("mouseenter", applyState);
+        link.addEventListener("focus", applyState);
     });
 
     socialContainer.addEventListener("mouseleave", clearSocialStates);
@@ -105,6 +186,12 @@ function setupSocialIconHoverEffects() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    const hamburgerButton = document.querySelector(".hamburger-icon");
+    if (hamburgerButton) {
+        hamburgerButton.addEventListener("click", toggleMenu);
+    }
+
+    setupThemeToggle();
     setupHyperframeStyleAnimations();
     setupSocialIconHoverEffects();
 });

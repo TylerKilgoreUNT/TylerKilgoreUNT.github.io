@@ -10,50 +10,72 @@
         <link rel="stylesheet" href="style/mediaqueries.css" />
     </head>
     <body>
-        <nav id="desktop-nav">
+        <nav id="desktop-nav" aria-label="Primary">
             <img 
                 src="./assets/tyler-logo.PNG" 
                 alt="Tyler Kilgore logo" 
                 class="logo"
             />
-            <!-- <img 
-                src="./assets/tyler-logo2.PNG" 
-                alt="Tyler Kilgore logo"
-                class="top-logo"> -->
-            <div>
+            <div class="nav-actions">
                 <ul class="nav-links">
                     <li><a href="#about">About</a></li>
                     <li><a href="#experience">Experience</a></li>
                     <li><a href="#projects">Projects</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
+              <button
+                type="button"
+                class="theme-toggle"
+                data-theme-toggle
+                aria-label="Switch to dark mode"
+                aria-pressed="false"
+              >
+                <span class="theme-toggle__icon" aria-hidden="true">moon</span>
+              </button>
             </div>
         </nav>
-        <nav id="hamburger-nav">
+        <nav id="hamburger-nav" aria-label="Mobile">
             <img 
                 src="./assets/tyler-logo.PNG" 
                 alt="Tyler Kilgore logo" 
                 class="logo"
             />
             <div class="hamburger-menu">
-                <div class="hamburger-icon" onclick="toggleMenu()">
+                <button
+                    type="button"
+                    class="hamburger-icon"
+                    aria-label="Toggle navigation menu"
+                    aria-expanded="false"
+                    aria-controls="mobile-menu-links"
+                >
                     <span></span>
                     <span></span>
                     <span></span>
-              </div>
-                <div class="menu-links">
+              </button>
+                <div class="menu-links" id="mobile-menu-links">
                 <ul>
                     <li><a href="#about" onclick="toggleMenu()">About</a></li>
                     <li><a href="#experience" onclick="toggleMenu()">Experience</a></li>
                     <li><a href="#projects" onclick="toggleMenu()">Projects</a></li>
                     <li><a href="#contact" onclick="toggleMenu()">Contact</a></li>
+                  <li>
+                    <button
+                      type="button"
+                      class="theme-toggle"
+                      data-theme-toggle
+                      aria-label="Switch to dark mode"
+                      aria-pressed="false"
+                    >
+                      <span class="theme-toggle__icon" aria-hidden="true">moon</span>
+                    </button>
+                  </li>
                 </ul>
                 </div>
             </div>
         </nav>
         <section id="profile">
             <div class="section__pic-container">
-                <img src="./assets/profile-pic.png" alt="Tyler Kilgore profile picture">
+                <img src="./assets/profile-pic.png" alt="Tyler Kilgore">
             </div>
             <div class="section__text">
                 <p class="section__text__p1">Hello, I'm</p>
@@ -67,31 +89,43 @@
                         Contact Info
                     </button>
                 </div>
-                <div id="socials-container">
+                <div id="socials-container" aria-label="Social links">
+                  <a class="social-link" href="https://www.linkedin.com/in/tyler-kilgore04" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile">
                     <img 
-                        src="./assets/linkedin.png" 
-                        alt="My LinkedIn profile" 
-                        class="icon social-icon social-linkedin" 
-                        onclick="location.href='https://www.linkedin.com/in/tyler-kilgore04'"
+                      src="./assets/linkedin.png" 
+                      alt="LinkedIn" 
+                      data-default-src="./assets/linkedin.png"
+                      data-hover-src="./assets/linkedin_white.png"
+                      class="icon social-icon social-linkedin"
                     />
+                  </a>
+                  <a class="social-link" href="https://github.com/TylerKilgoreUNT" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile">
                     <img 
-                        src="./assets/github.png" 
-                        alt="My GitHub profile" 
-                        class="icon social-icon social-github" 
-                        onclick="location.href='https://github.com/TylerKilgoreUNT'"
+                      src="./assets/github.png" 
+                      alt="GitHub" 
+                      data-default-src="./assets/github.png"
+                      data-hover-src="./assets/github_white.png"
+                      class="icon social-icon social-github"
                     />
-                  <img 
-                    src="./assets/facebook.png" 
-                    alt="My Facebook profile" 
-                    class="icon social-icon social-facebook" 
-                    onclick="location.href='https://www.facebook.com/'"
-                  />
-                  <img 
-                    src="./assets/instagram.png" 
-                    alt="My Instagram profile" 
-                    class="icon social-icon social-instagram" 
-                    onclick="location.href='https://www.instagram.com/'"
-                  />
+                  </a>
+                  <a class="social-link" href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook profile">
+                    <img 
+                      src="./assets/facebook.png" 
+                      alt="Facebook" 
+                      data-default-src="./assets/facebook.png"
+                      data-hover-src="./assets/facebook_white.png"
+                      class="icon social-icon social-facebook"
+                    />
+                  </a>
+                  <a class="social-link" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram profile">
+                    <img 
+                      src="./assets/instagram.png" 
+                      alt="Instagram" 
+                      data-default-src="./assets/instagram.png"
+                      data-hover-src="./assets/instagram_white.png"
+                      class="icon social-icon social-instagram"
+                    />
+                  </a>
                 </div>
             </div>
         </section>
@@ -102,7 +136,7 @@
                 <div class="section__pic-container">
                     <img 
                         src="assets/profile-pic-2.png" 
-                        alt="Profile picture" 
+                        alt="Tyler Kilgore at UNT" 
                         class="about-pic">
                 </div>
                 <div class="about-details-container">
@@ -136,12 +170,14 @@
                     </div>
                 </div>
             </div>
-            <img 
+            <a href="./#experience" class="arrow" aria-label="Go to experience section">
+              <img 
                 src="./assets/arrow.png" 
-                alt="Arrow icon" 
-                class="icon arrow" 
-                onclick="location.href='./#experience'"
-            />
+                alt="" 
+                class="icon" 
+                aria-hidden="true"
+              />
+            </a>
         </section>
         <section id="experience">
             <p class="section__text__p1">Explore My</p>
@@ -281,12 +317,14 @@
                 </div>
               </div>
             </div>
-            <img
-              src="./assets/arrow.png"
-              alt="Arrow icon"
-              class="icon arrow"
-              onclick="location.href='./#projects'"
-            />
+            <a href="./#projects" class="arrow" aria-label="Go to projects section">
+              <img
+                src="./assets/arrow.png"
+                alt=""
+                class="icon"
+                aria-hidden="true"
+              />
+            </a>
         </section>
         <section id="projects">
             <p class="section__text__p1">Browse My Recent</p>
@@ -356,12 +394,14 @@
                 </div>
               </div>
             </div>
-            <img
-              src="./assets/arrow.png"
-              alt="Arrow icon"
-              class="icon arrow"
-              onclick="location.href='./#contact'"
-            />
+            <a href="./#contact" class="arrow" aria-label="Go to contact section">
+              <img
+                src="./assets/arrow.png"
+                alt=""
+                class="icon"
+                aria-hidden="true"
+              />
+            </a>
         </section>
         <section id="contact">
             <p class="section__text__p1">Get in Touch</p>
@@ -386,7 +426,7 @@
             </div>
         </section>
         <footer>
-            <nav>
+            <nav aria-label="Footer">
               <div class="nav-links-container">
                 <ul class="nav-links">
                   <li><a href="#about">About</a></li>
