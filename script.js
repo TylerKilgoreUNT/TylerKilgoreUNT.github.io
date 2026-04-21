@@ -21,6 +21,58 @@ function toggleMenu() {
     }
 }
 
+function updateSocialIconsForTheme() {
+    const socialContainer = document.querySelector("#socials-container");
+    if (!socialContainer) {
+        return;
+    }
+
+    const socialLinks = Array.from(socialContainer.querySelectorAll(".social-link"));
+    const socialIcons = socialLinks
+        .map((link) => link.querySelector(".social-icon"))
+        .filter(Boolean);
+
+    const isDarkMode = document.body.dataset.theme === "dark";
+    socialIcons.forEach((icon) => {
+        const originalDefaultSrc = icon.dataset.originalDefaultSrc || icon.dataset.defaultSrc;
+        const originalHoverSrc = icon.dataset.originalHoverSrc || icon.dataset.hoverSrc;
+
+        if (!originalDefaultSrc || !originalHoverSrc) {
+            return;
+        }
+
+        icon.dataset.originalDefaultSrc = originalDefaultSrc;
+        icon.dataset.originalHoverSrc = originalHoverSrc;
+
+        if (isDarkMode) {
+            icon.dataset.defaultSrc = originalHoverSrc;
+            icon.dataset.hoverSrc = originalHoverSrc;
+            icon.src = originalHoverSrc;
+        } else {
+            icon.dataset.defaultSrc = originalDefaultSrc;
+            icon.dataset.hoverSrc = originalHoverSrc;
+            icon.src = originalDefaultSrc;
+        }
+    });
+}
+
+function updateLogoForTheme() {
+    const logo = document.querySelector(".logo");
+    if (!logo) {
+        return;
+    }
+
+    const isDarkMode = document.body.dataset.theme === "dark";
+    const defaultSrc = logo.dataset.defaultSrc;
+    const darkSrc = logo.dataset.darkSrc;
+
+    if (isDarkMode && darkSrc) {
+        logo.src = darkSrc;
+    } else if (defaultSrc) {
+        logo.src = defaultSrc;
+    }
+}
+
 function setupThemeToggle() {
     const themeToggles = Array.from(document.querySelectorAll("[data-theme-toggle]"));
     if (themeToggles.length === 0) {
@@ -48,6 +100,9 @@ function setupThemeToggle() {
                 icon.textContent = isDark ? "sun" : "moon";
             }
         });
+
+        updateLogoForTheme();
+        updateSocialIconsForTheme();
     };
 
     applyTheme(initialTheme);
@@ -123,6 +178,8 @@ function setupSocialIconHoverEffects() {
     if (socialIcons.length === 0) {
         return;
     }
+
+    updateSocialIconsForTheme();
 
     socialIcons.forEach((icon) => {
         const hoverSrc = icon.dataset.hoverSrc;
