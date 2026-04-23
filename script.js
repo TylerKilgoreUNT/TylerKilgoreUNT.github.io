@@ -57,20 +57,16 @@ function updateSocialIconsForTheme() {
 }
 
 function updateLogoForTheme() {
-    const logo = document.querySelector(".logo");
-    if (!logo) {
-        return;
-    }
-
     const isDarkMode = document.body.dataset.theme === "dark";
-    const defaultSrc = logo.dataset.defaultSrc;
-    const darkSrc = logo.dataset.darkSrc;
-
-    if (isDarkMode && darkSrc) {
-        logo.src = darkSrc;
-    } else if (defaultSrc) {
-        logo.src = defaultSrc;
-    }
+    document.querySelectorAll(".logo[data-dark-src]").forEach((logo) => {
+        const defaultSrc = logo.dataset.defaultSrc;
+        const darkSrc = logo.dataset.darkSrc;
+        if (isDarkMode && darkSrc) {
+            logo.src = darkSrc;
+        } else if (defaultSrc) {
+            logo.src = defaultSrc;
+        }
+    });
 }
 
 function setupThemeToggle() {
@@ -242,6 +238,49 @@ function setupSocialIconHoverEffects() {
     });
 }
 
+function setupDesktopNavHoverEffects() {
+    const desktopNavLinksContainer = document.querySelector("#desktop-nav .nav-links");
+    if (!desktopNavLinksContainer) {
+        return;
+    }
+
+    const navLinks = Array.from(desktopNavLinksContainer.querySelectorAll("a"));
+    if (navLinks.length === 0) {
+        return;
+    }
+
+    const clearNavStates = () => {
+        navLinks.forEach((link) => {
+            link.classList.remove("is-active", "shift-left", "shift-right");
+        });
+    };
+
+    navLinks.forEach((link, activeIndex) => {
+        const applyState = () => {
+            clearNavStates();
+            link.classList.add("is-active");
+
+            navLinks.forEach((otherLink, index) => {
+                if (index < activeIndex) {
+                    otherLink.classList.add("shift-left");
+                } else if (index > activeIndex) {
+                    otherLink.classList.add("shift-right");
+                }
+            });
+        };
+
+        link.addEventListener("mouseenter", applyState);
+        link.addEventListener("focus", applyState);
+    });
+
+    desktopNavLinksContainer.addEventListener("mouseleave", clearNavStates);
+    desktopNavLinksContainer.addEventListener("focusout", (event) => {
+        if (!desktopNavLinksContainer.contains(event.relatedTarget)) {
+            clearNavStates();
+        }
+    });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     const hamburgerButton = document.querySelector(".hamburger-icon");
     if (hamburgerButton) {
@@ -251,5 +290,6 @@ document.addEventListener("DOMContentLoaded", () => {
     setupThemeToggle();
     setupHyperframeStyleAnimations();
     setupSocialIconHoverEffects();
+    setupDesktopNavHoverEffects();
 });
 
